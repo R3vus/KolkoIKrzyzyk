@@ -63,13 +63,15 @@ namespace KolkoIKrzyzyk
             NewGame();
         }
         #endregion
-
+        /// <summary>
+        /// Start a new game, create board
+        /// </summary>
         private void NewGame()
         {
             ///Create a new blan array of free cells
 
-            mSize = 3;
-            mLimit = 3;
+            mSize = 4;
+            mLimit = 4;
             mBoard = new char[mSize, mSize];
 
             for (var j = 0; j < mSize; j++)
@@ -171,16 +173,20 @@ namespace KolkoIKrzyzyk
                         }
                         if (licznikWin >= mLimit)
                         {
-                            // Game ends
                             mGameEnded = true;
                             // Highlight winning cells in green
-                            mButtons[j * mSize].Background = mButtons[j * mSize + 1].Background = mButtons[j * mSize + 2].Background = Brushes.Green;
-                        }
+                            for (var k = 0; k < mLimit; k++)
+                            {
+                                mButtons[j * mSize+i-k].Background = Brushes.Green;
+                            }
+                            }
                         if (licznikLose >= mLimit)
                         {
-                            // Game ends
                             mGameEnded = true;
-                            mButtons[j * mSize].Background = mButtons[j * mSize + 1].Background = mButtons[j * mSize + 2].Background = Brushes.Red;
+                            for (var k = 0; k < mLimit; k++)
+                            {
+                                mButtons[j * mSize + i - k].Background = Brushes.Red;
+                            }
                         }
                         }
                 }
@@ -206,80 +212,143 @@ namespace KolkoIKrzyzyk
                         }
                         if (licznikWin >= mLimit)
                         {
-                            // Game ends
                             mGameEnded = true;
                             // Highlight winning cells in green
-                            mButtons[ 0 * mSize+j].Background = mButtons[1 * mSize + j].Background = mButtons[2 * mSize + j].Background = Brushes.Green;
+                            for (var k = 0; k < mLimit; k++)
+                            {
+                                mButtons[((i-k) * mSize) + j].Background = Brushes.Green;
+                            }
                         }
                         if (licznikLose >= mLimit)
                         {
                             mGameEnded = true;
-                            mButtons[0 * mSize + j].Background = mButtons[1 * mSize + j].Background = mButtons[2 * mSize + j].Background = Brushes.Red;
+                            for (var k = 0; k < mLimit; k++)
+                            {
+                                mButtons[(i - k) * mSize + j].Background = Brushes.Red;
+                            }
                         }
                     }
                 }
                 #endregion
-                #region diagonal wins
-                // Check for diagonal wins 
-                licznikWin = 0;
-                licznikLose = 0;
-                for (var i = 0; i < mSize; i++)
-                {
-                    if (mBoard[i, i] == player)
-                    {
-                        licznikWin++;
-                        licznikLose = 0;
-                    }
-                    if (mBoard[i, i] == opponent)
-                    {
-                        licznikLose++;
-                        licznikWin = 0;
-                    }
-                    if (licznikWin >= mLimit)
-                    {
-                        // Game ends
-                        mGameEnded = true;
-                        // Highlight winning cells in green
-                        mButtons[0].Background = mButtons[4].Background = mButtons[8].Background = Brushes.Green;
-                    }
-                    if (licznikLose >= mLimit)
-                    {
-                        // Game ends
-                        mGameEnded = true;
-                        // Highlight winning cells in green
-                        mButtons[0].Background = mButtons[4].Background = mButtons[8].Background = Brushes.Red;
-                    }
-                }
-                licznikWin = 0;
-                licznikLose = 0;
-                for (var i = 0; i < mSize; i++)
-                {
-                    if (mBoard[mSize -1 - i, i] == player)
-                    {
-                        licznikWin++;
-                        licznikLose = 0;
-                    }
-                    if (mBoard[mSize-1 - i, i] == opponent)
-                    {
-                        licznikLose++;
-                        licznikWin = 0;
-                    }
-                    if (licznikWin >= mLimit)
-                    {
-                        // Game ends
-                        mGameEnded = true;
-                        // Highlight winning cells in green
-                        mButtons[2].Background = mButtons[4].Background = mButtons[6].Background = Brushes.Green;
-                    }
-                    if (licznikLose >= mLimit)
-                    {
-                        // Game ends
-                        mGameEnded = true;
-                        // Highlight winning cells in green
-                        mButtons[2].Background = mButtons[4].Background = mButtons[6].Background = Brushes.Red;
-                    }
-                }
-                #endregion
+              // #region diagonal wins
+              // // Check for diagonal wins 
+              // licznikWin = 0;
+              // licznikLose = 0;
+              // for (var j = mSize - mLimit; j > 0 ; j--)
+              // {
+              //     for (var i = 0; i < mSize - j; i++)
+              //     {   //sprawdzamoe po skosie lewy gorny- prawy dolny powyzej przekatnej
+              //         if (mBoard[i+j, i] == player)
+              //         {
+              //             licznikWin++;
+              //             licznikLose = 0;
+              //         }
+              //         if (mBoard[i+j, i] == opponent)
+              //         {
+              //             licznikLose++;
+              //             licznikWin = 0;
+              //         }
+              //         if (licznikWin >= mLimit)
+              //         {
+              //             // Game ends
+              //             mGameEnded = true;
+              //             for (var k = 0; k < mLimit; k++)
+              //             {
+              //                 mButtons[i*mSize+i+j].Background = Brushes.Green;
+              //             }
+              //         }
+              //
+              //         if (licznikLose >= mLimit)
+              //         {
+              //             // Game ends
+              //             mGameEnded = true;
+              //             // Highlight winning cells in green
+              //             mButtons[0].Background = mButtons[4].Background = mButtons[8].Background = Brushes.Red;
+              //         }
+              //
+              //         //sprawdzanie po skosie lewy gorny prawy dolny na przekatnej 
+              //         if (mBoard[i , i] == player)
+              //         {
+              //             licznikWin++;
+              //             licznikLose = 0;
+              //         }
+              //         if (mBoard[i , i] == opponent)
+              //         {
+              //             licznikLose++;
+              //             licznikWin = 0;
+              //         }
+              //         if (licznikWin >= mLimit)
+              //         {
+              //             // Game ends
+              //             mGameEnded = true;
+              //             // Highlight winning cells in green
+              //             mButtons[0].Background = mButtons[4].Background = mButtons[8].Background = Brushes.Green;
+              //         }
+              //         if (licznikLose >= mLimit)
+              //         {
+              //             // Game ends
+              //             mGameEnded = true;
+              //             // Highlight winning cells in green
+              //             mButtons[0].Background = mButtons[4].Background = mButtons[8].Background = Brushes.Red;
+              //         }
+              //         licznikWin = licznikLose = 0;
+              //         // sprawdzanie po skosie lewy gorny prawy dolny poniżej przekątnej 
+              //         if (mBoard[i, i + j] == player)
+              //         {
+              //             licznikWin++;
+              //             licznikLose = 0;
+              //         }
+              //         if (mBoard[i , i + j ] == opponent)
+              //         {
+              //             licznikLose++;
+              //             licznikWin = 0;
+              //         }
+              //         if (licznikWin >= mLimit)
+              //         {
+              //             // Game ends
+              //             mGameEnded = true;
+              //             // Highlight winning cells in green
+              //             mButtons[0].Background = mButtons[4].Background = mButtons[8].Background = Brushes.Green;
+              //         }
+              //         if (licznikLose >= mLimit)
+              //         {
+              //             // Game ends
+              //             mGameEnded = true;
+              //             // Highlight winning cells in green
+              //             mButtons[0].Background = mButtons[4].Background = mButtons[8].Background = Brushes.Red;
+              //         }
+              //     }
+              // }
+              // licznikWin = 0;
+              // licznikLose = 0;
+              // for (var i = 0; i < mSize; i++)
+              // {
+              //     if (mBoard[mSize -1 - i, i] == player)
+              //     {
+              //         licznikWin++;
+              //         licznikLose = 0;
+              //     }
+              //     if (mBoard[mSize-1 - i, i] == opponent)
+              //     {
+              //         licznikLose++;
+              //         licznikWin = 0;
+              //     }
+              //     if (licznikWin >= mLimit)
+              //     {
+              //         // Game ends
+              //         mGameEnded = true;
+              //         // Highlight winning cells in green
+              //         mButtons[2].Background = mButtons[4].Background = mButtons[6].Background = Brushes.Green;
+              //     }
+              //     if (licznikLose >= mLimit)
+              //     {
+              //         // Game ends
+              //         mGameEnded = true;
+              //         // Highlight winning cells in green
+              //         mButtons[2].Background = mButtons[4].Background = mButtons[6].Background = Brushes.Red;
+              //     }
+              // }
+              // #endregion
             }
  
             //Check for no winner and full mBoard 
@@ -303,7 +372,7 @@ namespace KolkoIKrzyzyk
 
 
 
-        private int Evaluate(char[,] board,int key)
+        private int Evaluate(char[,] board)
         #region Evaluate board
         {
             var licznikWin = 0;
@@ -416,7 +485,6 @@ namespace KolkoIKrzyzyk
                 row = -1,
                 col = -1
             };
-            var key = 10;
             // Traverse all cells, evalutae minimax function for
             // all empty cells. And return the cell with optimal
             // value.
@@ -432,8 +500,8 @@ namespace KolkoIKrzyzyk
 
                         // compute evaluation function for this
                         // move.
-                        int score = MIN(board,key);
-
+                        int score = AlfaBeta(board,20,-1000,1000,false);
+                        //int score = MIN(board);
                         // Undo the move
                         board[i, j] = '_';
 
@@ -453,10 +521,18 @@ namespace KolkoIKrzyzyk
         }
         #endregion
 
-        private int MIN(char[,] board, int key)
-        #region min
+  
+        /// <summary>
+        /// algorytm alfa beta
+        /// </summary>
+        /// <param name="board"> tablica wartosci pol/param>
+        /// <param name="alfa">parametr alfa do odcinania</param>
+        /// <param name="beta">parametr beta do odcinania </param>
+        /// <param name="glebokosc">maksymalna glebokosc rekurencji </param>
+        /// <returns></returns>
+         private int AlfaBeta(char[,] board,int glebokosc, int alfa, int beta, bool ismax)
         {
-            var score = Evaluate(board, key);
+            var score = Evaluate(board);
             if (score != 0)
                 return score;
             // If there are no more moves and no winner then
@@ -467,76 +543,66 @@ namespace KolkoIKrzyzyk
                     if (board[i, j] == '_')
                         fFull = 0;
             if (fFull == 1)
-                return Evaluate(board, key);
+                return Evaluate(board);
             score = 0;
-            var bestscore = 1000;
-            // Traverse all cells
-            for (int j = 0; j < 3; j++)
+            if(!ismax)
             {
-                for (int i = 0; i < 3; i++)
+                // Traverse all cells
+                for (int j = 0; j < 3; j++)
                 {
-                    // Check if cell is empty
-                    if (board[i, j] == '_')
+                    for (int i = 0; i < 3; i++)
                     {
-                        // Make the move
-                        board[i, j] = player;
+                        // Check if cell is empty
+                        if (board[i, j] == '_')
+                        {
+                            // Make the move
+                            board[i, j] = player;
 
-                        // Call minimax recursively and choose
-                        // the maximum value
-                        score = MAX(board,key-1);
-                        if (score < bestscore)
-                            bestscore = score;
-                        // Undo the move
-                        board[i, j] = '_';
+                            // Call minimax recursively and choose
+                            // the maximum value
+                            score = AlfaBeta(board,glebokosc-1,alfa,beta,!ismax);
+                            if (score < beta)
+                                beta = score;
+                            // Undo the move
+                            board[i, j] = '_';
+
+                            if (alfa >= beta)
+                                break;
+                        }
                     }
                 }
+                return beta;
             }
-            return bestscore;
-        }
-#endregion
-        private int MAX(char [,] board, int key)
-        #region max
-        {
-            var score = Evaluate(board, key);
-            if (score != 0)
-                return score;
-
-            // If there are no more moves and no winner then
-            // it is a tie
-            var fFull = 1;
-            for (int j = 0; j < mSize; j++)
-                for (int i = 0; i < mSize; i++)
-                    if (board[i, j] == '_')
-                        fFull = 0;
-            if (fFull == 1)
-                return Evaluate(board,key); ;
-             score = 0;
-            var bestscore = -1000;
-            // Traverse all cells
-            for (int j = 0; j < mSize; j++)
+            else
             {
-                for (int i = 0; i < mSize; i++)
+                // Traverse all cells
+                for (int j = 0; j < 3; j++)
                 {
-                    // Check if cell is empty
-                    if (board[i, j] == '_')
+                    for (int i = 0; i < 3; i++)
                     {
-                        // Make the move
-                        board[i, j] = opponent;
+                        // Check if cell is empty
+                        if (board[i, j] == '_')
+                        {
+                            // Make the move
+                            board[i, j] = opponent;
 
-                        // Call minimax recursively and choose
-                        // the maximum value
-                        score = MIN(board,key-1);
-                        if (score > bestscore)
-                            bestscore = score;       
-                        // Undo the move
-                        board[i, j] = '_';
+                            // Call minimax recursively and choose
+                            // the maximum value
+                            score = AlfaBeta(board, glebokosc - 1, alfa, beta, !ismax);
+                            if (score > alfa)
+                                alfa = score;
+                            // Undo the move
+                            board[i, j] = '_';
+
+                            if (alfa >= beta)
+                                break;
+                        }
                     }
                 }
+                return alfa;
             }
-            return bestscore;
-        }
-        #endregion
 
+        }
 
     }
 }
