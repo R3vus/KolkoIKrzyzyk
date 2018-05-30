@@ -70,8 +70,8 @@ namespace KolkoIKrzyzyk
         {
             ///Create a new blan array of free cells
 
-            mSize = 4;
-            mLimit = 4;
+            mSize = 6;
+            mLimit = 6;
             mBoard = new char[mSize, mSize];
 
             for (var j = 0; j < mSize; j++)
@@ -132,17 +132,29 @@ namespace KolkoIKrzyzyk
             {
                 return;
             }
-            //AI move
-            AIMove();
-            //Check for a winner
-            CheckForWinner();
-        }
+            while (!mGameEnded)
+            {
+                //AI move
+                AIMove();
+                //Check for a winner
+                CheckForWinner();
+                opponent = 'X';
+                player = 'O';
+                AIMove();
+                CheckForWinner();
+                opponent = 'O';
+                player = 'X';
+            }
+            }
 
         private void AIMove()
         {
             Move bestMove = Minimax(mBoard);
-            mButtons[bestMove.col +((bestMove.row )* mSize)].Content = "O";
-            mBoard[bestMove.col,bestMove.row] = 'O';
+            if (bestMove.col == -1 || bestMove.row == -1)
+                return;
+            mButtons[bestMove.col +((bestMove.row )* mSize)].Content = opponent;
+
+            mBoard[bestMove.col,bestMove.row] = opponent;
             mPlayer1Turn ^= true;
         }
 
@@ -230,125 +242,167 @@ namespace KolkoIKrzyzyk
                     }
                 }
                 #endregion
-              // #region diagonal wins
-              // // Check for diagonal wins 
-              // licznikWin = 0;
-              // licznikLose = 0;
-              // for (var j = mSize - mLimit; j > 0 ; j--)
-              // {
-              //     for (var i = 0; i < mSize - j; i++)
-              //     {   //sprawdzamoe po skosie lewy gorny- prawy dolny powyzej przekatnej
-              //         if (mBoard[i+j, i] == player)
-              //         {
-              //             licznikWin++;
-              //             licznikLose = 0;
-              //         }
-              //         if (mBoard[i+j, i] == opponent)
-              //         {
-              //             licznikLose++;
-              //             licznikWin = 0;
-              //         }
-              //         if (licznikWin >= mLimit)
-              //         {
-              //             // Game ends
-              //             mGameEnded = true;
-              //             for (var k = 0; k < mLimit; k++)
-              //             {
-              //                 mButtons[i*mSize+i+j].Background = Brushes.Green;
-              //             }
-              //         }
-              //
-              //         if (licznikLose >= mLimit)
-              //         {
-              //             // Game ends
-              //             mGameEnded = true;
-              //             // Highlight winning cells in green
-              //             mButtons[0].Background = mButtons[4].Background = mButtons[8].Background = Brushes.Red;
-              //         }
-              //
-              //         //sprawdzanie po skosie lewy gorny prawy dolny na przekatnej 
-              //         if (mBoard[i , i] == player)
-              //         {
-              //             licznikWin++;
-              //             licznikLose = 0;
-              //         }
-              //         if (mBoard[i , i] == opponent)
-              //         {
-              //             licznikLose++;
-              //             licznikWin = 0;
-              //         }
-              //         if (licznikWin >= mLimit)
-              //         {
-              //             // Game ends
-              //             mGameEnded = true;
-              //             // Highlight winning cells in green
-              //             mButtons[0].Background = mButtons[4].Background = mButtons[8].Background = Brushes.Green;
-              //         }
-              //         if (licznikLose >= mLimit)
-              //         {
-              //             // Game ends
-              //             mGameEnded = true;
-              //             // Highlight winning cells in green
-              //             mButtons[0].Background = mButtons[4].Background = mButtons[8].Background = Brushes.Red;
-              //         }
-              //         licznikWin = licznikLose = 0;
-              //         // sprawdzanie po skosie lewy gorny prawy dolny poniżej przekątnej 
-              //         if (mBoard[i, i + j] == player)
-              //         {
-              //             licznikWin++;
-              //             licznikLose = 0;
-              //         }
-              //         if (mBoard[i , i + j ] == opponent)
-              //         {
-              //             licznikLose++;
-              //             licznikWin = 0;
-              //         }
-              //         if (licznikWin >= mLimit)
-              //         {
-              //             // Game ends
-              //             mGameEnded = true;
-              //             // Highlight winning cells in green
-              //             mButtons[0].Background = mButtons[4].Background = mButtons[8].Background = Brushes.Green;
-              //         }
-              //         if (licznikLose >= mLimit)
-              //         {
-              //             // Game ends
-              //             mGameEnded = true;
-              //             // Highlight winning cells in green
-              //             mButtons[0].Background = mButtons[4].Background = mButtons[8].Background = Brushes.Red;
-              //         }
-              //     }
-              // }
-              // licznikWin = 0;
-              // licznikLose = 0;
-              // for (var i = 0; i < mSize; i++)
-              // {
-              //     if (mBoard[mSize -1 - i, i] == player)
-              //     {
-              //         licznikWin++;
-              //         licznikLose = 0;
-              //     }
-              //     if (mBoard[mSize-1 - i, i] == opponent)
-              //     {
-              //         licznikLose++;
-              //         licznikWin = 0;
-              //     }
-              //     if (licznikWin >= mLimit)
-              //     {
-              //         // Game ends
-              //         mGameEnded = true;
-              //         // Highlight winning cells in green
-              //         mButtons[2].Background = mButtons[4].Background = mButtons[6].Background = Brushes.Green;
-              //     }
-              //     if (licznikLose >= mLimit)
-              //     {
-              //         // Game ends
-              //         mGameEnded = true;
-              //         // Highlight winning cells in green
-              //         mButtons[2].Background = mButtons[4].Background = mButtons[6].Background = Brushes.Red;
-              //     }
-              // }
-              // #endregion
+              #region diagonal wins
+              // Check for diagonal wins 
+              licznikWin = 0;
+              licznikLose = 0;
+              for (var j = 0; j <= mSize - mLimit ; j++)
+              {
+                    licznikLose = licznikWin = 0;
+                    for (var i = 0; i < mSize - j; i++)
+                    {   //sprawdzamoe po skosie lewy gorny- prawy dolny powyzej przekatnej
+                        if (mBoard[i + j, i] == player)
+                        {
+                            licznikWin++;
+                            licznikLose = 0;
+                        }
+                        if (mBoard[i + j, i] == opponent)
+                        {
+                            licznikLose++;
+                            licznikWin = 0;
+                        }
+                        if (licznikWin >= mLimit)
+                        {
+                            // Game ends
+                            mGameEnded = true;
+                            // Highlight winning cells in green
+                            for (var k = 0; k < mLimit; k++)
+                            {
+                                mButtons[i * mSize + i + j - k*(mSize+1)].Background = Brushes.Green;
+                            }
+                        }
+
+                        if (licznikLose >= mLimit)
+                        {
+                            // Game ends
+                            mGameEnded = true;
+                            // Highlight winning cells in red
+                            for (var k = 0; k < mLimit; k++)
+                            {
+                                mButtons[i * mSize + i + j - k * (mSize + 1)].Background = Brushes.Red;
+                            }
+                        }
+
+                    }
+              }
+                licznikWin = 0;
+                licznikLose = 0;
+                for (var j = 0; j <= mSize - mLimit; j++)
+                {
+                    licznikLose = licznikWin = 0;
+                    for (var i = 0; i < mSize - j; i++)
+                    {   //sprawdzamoe po skosie lewy gorny- prawy dolny ponizej przekatnej
+                        if (mBoard[i, i + j ] == player)
+                        {
+                            licznikWin++;
+                            licznikLose = 0;
+                        }
+                        if (mBoard[i , i + j ] == opponent)
+                        {
+                            licznikLose++;
+                            licznikWin = 0;
+                        }
+                        if (licznikWin >= mLimit)
+                        {
+                            // Game ends
+                            mGameEnded = true;
+                            // Highlight winning cells in green
+                            for (var k = 0; k < mLimit; k++)
+                            {
+                                mButtons[(i+j) * mSize + i - k * (mSize + 1)].Background = Brushes.Green;
+                            }
+                        }
+
+                        if (licznikLose >= mLimit)
+                        {
+                            // Game ends
+                            mGameEnded = true;
+                            // Highlight winning cells in red
+                            for (var k = 0; k < mLimit; k++)
+                            {
+                                mButtons[(i + j) * mSize + i - k * (mSize + 1)].Background = Brushes.Red;
+                            }
+                        }
+
+                    }
+                }
+                for (var j = 0; j <= mSize - mLimit; j++)
+                {
+                    licznikLose = licznikWin = 0;
+                    for (var i = 0; i < mSize - j; i++)
+                    {   //sprawdzamoe po skosie prawy gorny- lewy dolny powyzej przekatnej
+                        if (mBoard[mSize - 1 - i - j, i] == player)
+                        {
+                            licznikWin++;
+                            licznikLose = 0;
+                        }
+                        if (mBoard[mSize - 1 - i - j, i] == opponent)
+                        {
+                            licznikLose++;
+                            licznikWin = 0;
+                        }
+                        if (licznikWin >= mLimit)
+                        {
+                            mGameEnded = true;
+                            // Highlight winning cells in green
+                            for (var k = 0; k < mLimit; k++)
+                            {
+                                mButtons[i * mSize +(mSize-1-i-j) - k * (mSize-1)].Background = Brushes.Green;
+                            }
+                        }
+
+                        if (licznikLose >= mLimit)
+                        {
+                            mGameEnded = true;
+                            //highlight winning cells in red
+                            for (var k = 0; k < mLimit; k++)
+                            {
+                                mButtons[i * mSize + (mSize - 1 - i - j) - k * (mSize-1)].Background = Brushes.Red;
+                            }
+                        }
+
+                    }
+                }
+                licznikWin = 0;
+                licznikLose = 0;
+                for (var j = 0; j <= mSize - mLimit; j++)
+                {
+                    licznikLose = licznikWin = 0;
+                    for (var i = 0; i < mSize - j; i++)
+                    {   //sprawdzamy po skosie lewy gorny- prawy dolny na i poniżej przekatnej
+                        if (mBoard[mSize - 1 - i, i + j] == player)
+                        {
+                            licznikWin++;
+                            licznikLose = 0;
+                        }
+                        if (mBoard[mSize - 1 - i, i + j] == opponent)
+                        {
+                            licznikLose++;
+                            licznikWin = 0;
+                        }
+                        if (licznikWin >= mLimit)
+                        {
+                            mGameEnded = true;
+                            //Highlight winning cells in green
+                            for (var k = 0; k < mLimit; k++)
+                            {
+                                mButtons[(i+j) * mSize + (mSize - 1 - i) - k * (mSize-1)].Background = Brushes.Green;
+                            }
+                        }
+
+                        if (licznikLose >= mLimit)
+                        {
+                            mGameEnded = true;
+                            //Highlight winning cells in red
+                            for (var k = 0; k < mLimit; k++)
+                            {
+                                mButtons[(i + j) * mSize + (mSize - 1 - i) - k * (mSize - 1)].Background = Brushes.Red;
+                            }
+                        }
+
+                    }
+                }
+                #endregion
             }
  
             //Check for no winner and full mBoard 
@@ -432,41 +486,119 @@ namespace KolkoIKrzyzyk
             // Check for diagonal wins 
             licznikWin = 0;
             licznikLose = 0;
-            for (var i = 0; i < mSize; i++)
+            for (var j = 0; j <= mSize - mLimit; j++)
             {
-                if (board[i, i] == opponent)
-                {
-                    licznikWin++;
-                    licznikLose = 0;
+                licznikLose = licznikWin = 0;
+                for (var i = 0; i < mSize - j; i++)
+                {   //sprawdzamoe po skosie lewy gorny- prawy dolny powyzej przekatnej
+                    if (mBoard[i + j, i] == opponent)
+                    {
+                        licznikWin++;
+                        licznikLose = 0;
+                    }
+                    if (mBoard[i + j, i] == player)
+                    {
+                        licznikLose++;
+                        licznikWin = 0;
+                    }
+                    if (licznikWin >= mLimit)
+                    {
+                        return 10;
+                    }
+
+                    if (licznikLose >= mLimit)
+                    {
+                        return -10;
+                    }
+
                 }
-                if (board[i, i] == player)
-                {
-                    licznikLose++;
-                    licznikWin = 0;
-                }
-                if (licznikWin >= mLimit)
-                    return 10;
-                if (licznikLose >= mLimit)
-                    return -10;
             }
             licznikWin = 0;
             licznikLose = 0;
-            for (var i = 0; i < mSize; i++)
+            for (var j = 0; j <= mSize - mLimit; j++)
             {
-                if (board[mSize-1-i, i] == opponent)
-                {
-                    licznikWin++;
-                    licznikLose = 0;
+                licznikLose = licznikWin = 0;
+                for (var i = 0; i < mSize - j; i++)
+                {   //sprawdzamoe po skosie lewy gorny- prawy dolny na i poniżej przekatnej
+                    if (mBoard[i, i + j] == opponent)
+                    {
+                        licznikWin++;
+                        licznikLose = 0;
+                    }
+                    if (mBoard[i, i + j] == player)
+                    {
+                        licznikLose++;
+                        licznikWin = 0;
+                    }
+                    if (licznikWin >= mLimit)
+                    {
+                        return 10;
+                    }
+
+                    if (licznikLose >= mLimit)
+                    {
+                        return -10;
+                        
+                    }
+
                 }
-                if (board[mSize-1-i, i] == player)
-                {
-                    licznikLose++;
-                    licznikWin = 0;
+            }
+            for (var j = 0; j <= mSize - mLimit; j++)
+            {
+                licznikLose = licznikWin = 0;
+                for (var i = 0; i < mSize - j; i++)
+                {   //sprawdzamoe po skosie prawy gorny- lewy dolny powyzej przekatnej
+                    if (mBoard[mSize -1 - i - j, i] == opponent)
+                    {
+                        licznikWin++;
+                        licznikLose = 0;
+                    }
+                    if (mBoard[mSize -1 - i - j, i] == player)
+                    {
+                        licznikLose++;
+                        licznikWin = 0;
+                    }
+                    if (licznikWin >= mLimit)
+                    {
+                        return 10;
+                    }
+
+                    if (licznikLose >= mLimit)
+                    {
+                        return -10;
+                    }
+
                 }
-                if (licznikWin >= mLimit)
-                    return 10;
-                if (licznikLose >= mLimit)
-                    return -10;
+            }
+            licznikWin = 0;
+            licznikLose = 0;
+            for (var j = 0; j <= mSize - mLimit; j++)
+            {
+                licznikLose = licznikWin = 0;
+                for (var i = 0; i < mSize - j; i++)
+                {   //sprawdzamoe po skosie lewy gorny- prawy dolny na i poniżej przekatnej
+                    if (mBoard[mSize - 1 - i, i + j] == opponent)
+                    {
+                        licznikWin++;
+                        licznikLose = 0;
+                    }
+                    if (mBoard[mSize - 1 - i, i + j] == player)
+                    {
+                        licznikLose++;
+                        licznikWin = 0;
+                    }
+                    if (licznikWin >= mLimit)
+                    {
+                        return 10;
+                    }
+
+                    if (licznikLose >= mLimit)
+                    {
+                        return -10;
+
+                    }
+
+                }
             }
             #endregion
             return 0;
