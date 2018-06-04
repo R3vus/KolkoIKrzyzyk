@@ -71,7 +71,7 @@ namespace KolkoIKrzyzyk
             ///Create a new blan array of free cells
 
             mSize = 6;
-            mLimit = 6;
+            mLimit = 5;
             mBoard = new char[mSize, mSize];
 
             for (var j = 0; j < mSize; j++)
